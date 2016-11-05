@@ -17,6 +17,7 @@ u4, 17, open
 u1, 18, open
 u2, 19, close
 u1, 20, open
+u1, 23, close
 u3, 21, close
 u4, 22, close
-u1, 23, close
+u4, 23, close

@@ -41,6 +41,7 @@ public class FileUtil {
 
     public static String createTempFile() throws IOException {
         File tempFile = File.createTempFile("log", ".tmp", new File("/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp"));
+        tempFile.deleteOnExit();
         return tempFile.getAbsolutePath();
     }
 

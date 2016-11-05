@@ -12,11 +12,12 @@ u2, 2, open
 u2, 7, close
 u2, 14, open
 u2, 19, close
-u3, 10, close
 u3, 3, open
+u3, 10, close
 u3, 15, open
 u3, 21, close
-u4, 11, close
 u4, 5, open
+u4, 11, close
 u4, 17, open
 u4, 22, close
+u4, 23, close

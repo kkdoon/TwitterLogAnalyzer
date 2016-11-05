@@ -1,6 +1,7 @@
 package org.twitter.analytics.core;
 
 import org.twitter.analytics.comparator.AvgLogFileComparator;
+import org.twitter.analytics.comparator.UserLineComparator;
 import org.twitter.analytics.iterator.BufferedReaderIterator;
 import org.twitter.analytics.util.FileUtil;
 
@@ -29,12 +30,12 @@ public class MergeSortFile {
         this.tempFiles = new ArrayList<String>();
     }
 
-    public void process(Comparator<BufferedReaderIterator> comparator) {
-        partitionFiles();
-        mergeFiles(comparator);
+    public void process(Comparator<String> comparator1, Comparator<BufferedReaderIterator> comparator2) {
+        partitionFiles(comparator1);
+        mergeFiles(comparator2);
     }
 
-    private void partitionFiles() {
+    private void partitionFiles(Comparator<String> comparator) {
         int count = 0, totalCount = 0;
         BufferedReader br = null;
         List<String> tempList;
@@ -45,7 +46,7 @@ public class MergeSortFile {
             for (String line : brIter) {
                 totalCount++;
                 if (count >= maxLines) {
-                    Collections.sort(tempList);
+                    Collections.sort(tempList, comparator);
                     // Write data to temp file
                     tempFiles.add(FileUtil.createTempFile());
                     System.out.println("Temp file:" + tempFiles.get(tempFiles.size() - 1));
@@ -139,7 +140,7 @@ public class MergeSortFile {
         String input = "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/input.txt";
         String output = "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/output.txt";
         MergeSortFile obj = new MergeSortFile(input, output, 10);
-        obj.process(new AvgLogFileComparator());
+        obj.process(new UserLineComparator(), new AvgLogFileComparator());
         BufferedReader br = null;
         try {
             br = FileUtil.openFile(output);
@@ -153,5 +154,4 @@ public class MergeSortFile {
             FileUtil.closeFile(br);
         }
     }
-
 }

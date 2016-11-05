@@ -9,7 +9,7 @@ import java.util.Iterator;
  */
 public class BufferedReaderIterator implements Iterable<String> {
 
-    private static  final  int MAX_CHARS_READ = 100;
+    private static  final  int MAX_CHARS_READ = 35;
     private BufferedReader r;
 
     public BufferedReaderIterator(BufferedReader r) {
