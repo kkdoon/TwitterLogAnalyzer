@@ -44,3 +44,13 @@ a particular number of user's data and the shard file vs user mapping is maintai
 data is written to the appropriate file.
 - Now data can be read from one file at a time, where data for all the users in the file is maintained in memory. Since, each file
 consists of data for limited number of users, the process will be able to operate within the memory constraints.
+
+Code Structure:
+- main: Contains source code and resources
+    - java: Contains source code. Service folder contains the entry point to the program (LogAnalyzerService class).
+    - resources:
+        - data: Contains code coverage report (index.html), sample input/output file, sample log file generated
+        - filegen: Contains script to populate large dataset to test source code for memory conditions
+        - scripts: Contains script to start the java process
+        - temp: Contains sample files generated during test phase
+- test: Contains JUnit test cases
