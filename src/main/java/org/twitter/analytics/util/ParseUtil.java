@@ -11,11 +11,15 @@ public class ParseUtil {
         if (line == null || line.trim().isEmpty()) return null;
         String[] cols = line.split(",");
         if (cols.length >= 3) {
-            UserTick obj = new UserTick();
-            obj.setUserID(cols[0].trim());
-            obj.setTimestamp(Long.parseLong(cols[1].trim()));
-            obj.setOperation(cols[2].trim());
-            return obj;
+            try {
+                UserTick obj = new UserTick();
+                obj.setUserID(cols[0].trim());
+                obj.setTimestamp(Long.parseLong(cols[1].trim()));
+                obj.setOperation(cols[2].trim());
+                return obj;
+            } catch (Exception e) {
+                return null;
+            }
         }
         return null;
     }

@@ -8,12 +8,11 @@ import org.twitter.analytics.policy.OCPolicy;
  */
 public class PolicyFactoryUtil {
     private final static Logger LOG = Logger.getLogger(PolicyFactoryUtil.class);
-    private static final String POLICY_PACKAGE = "org.twitter.analytics.policy";
 
     public static OCPolicy getPolicyInstance(String policyName) {
         if (policyName == null) return null;
         try {
-            String className = POLICY_PACKAGE + "." + policyName;
+            String className = Constants.POLICY_PACKAGE + "." + policyName;
             Class c = Class.forName(className);
             LOG.info("Initialized policy: " + policyName);
             return (OCPolicy) c.newInstance();

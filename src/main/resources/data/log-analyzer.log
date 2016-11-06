@@ -1,0 +1,14 @@
+2016-11-06 01:44:25 INFO  PolicyFactoryUtil:17 - Initialized policy: DefaultOCPolicy
+2016-11-06 01:44:25 INFO  LogAnalyzerService:42 - Input file: /Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/input.txt
+ Sort output file:/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/sortOutput.txt
+ Result output file:/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/finalOutput.txt
+2016-11-06 01:44:25 INFO  MergeSortFile:40 - Starting file partitioning
+2016-11-06 01:44:25 DEBUG MergeSortFile:55 - Temp file:/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/log6270054573905078748.tmp
+2016-11-06 01:44:25 DEBUG MergeSortFile:55 - Temp file:/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/log646502993259994341.tmp
+2016-11-06 01:44:25 DEBUG MergeSortFile:82 - Final Temp file:/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/log2186909038211781877.tmp
+2016-11-06 01:44:25 INFO  MergeSortFile:106 - File partitioning ended
+2016-11-06 01:44:25 INFO  MergeSortFile:122 - Starting file merge among 3 files
+2016-11-06 01:44:25 INFO  MergeSortFile:142 - File merge ended
+2016-11-06 01:44:25 INFO  AverageCalculator:90 - Flushing values for userId u4
+2016-11-06 01:44:25 WARN  DefaultOCPolicy:17 - Skipping tick pair as sufficient info not provided
+2016-11-06 01:44:25 INFO  LogAnalyzerService:50 - Log analyzer service finished. Please read file /Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/finalOutput.txt for final results

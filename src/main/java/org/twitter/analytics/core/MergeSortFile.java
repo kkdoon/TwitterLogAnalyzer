@@ -15,18 +15,19 @@ import java.util.*;
 public class MergeSortFile {
     private final static Logger LOG = Logger.getLogger(MergeSortFile.class);
     private String inputFile, tempPath, outputFile;
-    private int maxLines;
+    private int maxLines, maxCharsRead;
     private List<String> tempFiles;
 
     private MergeSortFile() {
 
     }
 
-    public MergeSortFile(String inputFile, String tempPath, String outputFile, int maxLines) {
+    public MergeSortFile(String inputFile, String tempPath, String outputFile, int maxLines, int maxCharsRead) {
         this.inputFile = inputFile;
         this.tempPath = tempPath;
         this.outputFile = outputFile;
         this.maxLines = maxLines;
+        this.maxCharsRead = maxCharsRead;
         this.tempFiles = new ArrayList<String>();
     }
 
@@ -43,7 +44,7 @@ public class MergeSortFile {
         try {
             br = FileUtil.openFile(inputFile);
             tempList = new ArrayList<String>();
-            BufferedReaderIterator brIter = new BufferedReaderIterator(br);
+            BufferedReaderIterator brIter = new BufferedReaderIterator(br, maxCharsRead);
             for (String line : brIter) {
                 totalCount++;
                 if (count >= maxLines) {
@@ -112,7 +113,7 @@ public class MergeSortFile {
         for (String tempFile : tempFiles) {
             try {
                 fileReaders[count] = FileUtil.openFile(tempFile);
-                queue.offer(new BufferedReaderIterator(fileReaders[count]));
+                queue.offer(new BufferedReaderIterator(fileReaders[count], maxCharsRead));
                 count++;
             } catch (IOException e) {
                 LOG.error("Error while merging files", e);

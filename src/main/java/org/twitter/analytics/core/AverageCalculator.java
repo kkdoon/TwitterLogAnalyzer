@@ -17,24 +17,11 @@ import java.util.Map;
 public class AverageCalculator {
     private final static Logger LOG = Logger.getLogger(AverageCalculator.class);
     private Map<String, UserAvgTimeModel> map;
-    private static OCPolicy policy;
+    private OCPolicy policy;
 
-    static {
-        try {
-            String policyName = System.getProperty("POLICY_NAME");
-            policy = PolicyFactoryUtil.getPolicyInstance(policyName);
-            if (policy == null) {
-                LOG.info("Initializing default policy");
-                policy = new DefaultOCPolicy();
-            }
-        } catch (Exception e) {
-            LOG.error("Unable to initialize system properties", e);
-            throw new RuntimeException("Unable to initialize system properties");
-        }
-    }
-
-    public AverageCalculator() {
+    public AverageCalculator(OCPolicy policy) {
         map = new HashMap<String, UserAvgTimeModel>();
+        this.policy = policy;
     }
 
     public void addTick(UserTick tick) {

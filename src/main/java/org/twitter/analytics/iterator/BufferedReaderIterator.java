@@ -11,20 +11,12 @@ import java.util.Iterator;
  */
 public class BufferedReaderIterator implements Iterable<String> {
     private final static Logger LOG = Logger.getLogger(BufferedReaderIterator.class);
-    private static final int MAX_CHARS_READ;
+    private int maxCharsRead;
     private BufferedReader r;
 
-    static {
-        try {
-            MAX_CHARS_READ = Integer.parseInt(System.getProperty("MAX_CHARS_READ"));
-        } catch (Exception e) {
-            LOG.error("Unable to initialize system property MAX_CHARS_READ", e);
-            throw new RuntimeException("Unable to initialize system property");
-        }
-    }
-
-    public BufferedReaderIterator(BufferedReader r) {
+    public BufferedReaderIterator(BufferedReader r, int maxCharsRead) {
         this.r = r;
+        this.maxCharsRead = maxCharsRead;
     }
 
     @Override
@@ -66,7 +58,7 @@ public class BufferedReaderIterator implements Iterable<String> {
 
     public String getCurrentLineForComparison() {
         try {
-            r.mark(MAX_CHARS_READ);
+            r.mark(maxCharsRead);
             String line = r.readLine();
             r.reset();
             return line;
@@ -75,5 +67,4 @@ public class BufferedReaderIterator implements Iterable<String> {
             return null;
         }
     }
-
 }
