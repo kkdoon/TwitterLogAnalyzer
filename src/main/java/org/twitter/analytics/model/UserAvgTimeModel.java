@@ -10,6 +10,10 @@ public class UserAvgTimeModel {
     private String userId;
     private double average;
     @JsonIgnore
+    private UserTick oldTick;
+    @JsonIgnore
+    private UserTick newTick;
+    @JsonIgnore
     private long count;
 
     public UserAvgTimeModel(String userId) {
@@ -40,5 +44,21 @@ public class UserAvgTimeModel {
 
     public void setCount(long count) {
         this.count = count;
+    }
+
+    public UserTick getNewTick() {
+        return newTick;
+    }
+
+    public void setNewTick(UserTick newTick) {
+        this.newTick = newTick;
+    }
+
+    public UserTick getOldTick() {
+        return oldTick;
+    }
+
+    public void setOldTick(UserTick oldTick) {
+        this.oldTick = oldTick;
     }
 }

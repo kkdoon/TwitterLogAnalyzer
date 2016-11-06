@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.twitter.analytics.comparator.AvgLogFileComparator;
 import org.twitter.analytics.comparator.UserLineComparator;
+import org.twitter.analytics.core.AverageCalculator;
 import org.twitter.analytics.core.MergeSortFile;
 import org.twitter.analytics.iterator.BufferedReaderIterator;
-import org.twitter.analytics.model.UserAvgTimeModel;
-import org.twitter.analytics.model.UserModel;
+import org.twitter.analytics.model.UserTick;
 import org.twitter.analytics.policy.DefaultOCPolicy;
 import org.twitter.analytics.policy.OCPolicy;
 import org.twitter.analytics.util.FileUtil;
@@ -17,7 +17,6 @@ import org.twitter.analytics.util.PolicyFactoryUtil;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class LogAnalyzerService {
     private final static Logger LOG = Logger.getLogger(LogAnalyzerService.class);
@@ -61,15 +60,14 @@ public class LogAnalyzerService {
             try {
                 writer = FileUtil.getFileWriter(resultOutput);
                 writer.write("[");
+                AverageCalculator calculator = new AverageCalculator();
                 mapper = new ObjectMapper();
                 String prevUser = null, currentUser;
-                UserAvgTimeModel avgObj = null;
-                UserModel[] userTicks = new UserModel[2];
-                Arrays.fill(userTicks, null);
                 boolean isFirst = true;
                 for (String line : brIter) {
-                    UserModel curr = ParseUtil.parseLogFileLine(line);
+                    UserTick curr = ParseUtil.parseLogFileLine(line);
                     if (curr == null) {
+                        LOG.warn("Skipping line as cannot be parsed: " + line);
                         continue;
                     }
 
@@ -77,56 +75,32 @@ public class LogAnalyzerService {
 
                     if (prevUser == null) {
                         prevUser = currentUser;
-                        userTicks[0] = curr;
-                        avgObj = new UserAvgTimeModel(currentUser);
+                        calculator.addTick(curr);
                         continue;
                     }
 
                     if (prevUser.equals(currentUser)) {
-                        if (userTicks[0] == null) {
-                            userTicks[0] = curr;
-                        } else {
-                            userTicks[1] = curr;
-                            // Calculate avg
-                            UserModel nextTick = policy.calculate(userTicks[0], userTicks[1], avgObj);
-                            Arrays.fill(userTicks, null);
-                            // Setting the open tick for next interval
-                            if (nextTick != null) {
-                                userTicks[0] = nextTick;
-                            }
-                        }
+                        calculator.addTick(curr);
                     } else {
                         // Handling case when no close tick provided
-                        if (userTicks[0] != null) {
-                            policy.calculate(userTicks[0], userTicks[1], avgObj);
-                        }
-                        // Write average data
+                        calculator.flushAvg(prevUser);
+                        // Write user average data
                         if (!isFirst) {
-                            writer.write("," + mapper.writeValueAsString(avgObj));
+                            writer.write("," + mapper.writeValueAsString(calculator.getAverageModel(prevUser)));
                         } else {
-                            writer.write(mapper.writeValueAsString(avgObj));
+                            writer.write(mapper.writeValueAsString(calculator.getAverageModel(prevUser)));
                             isFirst = false;
                         }
-                        Arrays.fill(userTicks, null);
-                        userTicks[0] = curr;
                         prevUser = currentUser;
-                        avgObj = new UserAvgTimeModel(currentUser);
+                        calculator.addTick(curr);
                     }
                 }
-                // Writing last userId value
-                if (userTicks[1] != null) {
-                    writer.write(mapper.writeValueAsString(avgObj));
-                    writer.newLine();
+                // Writing average value for last user
+                calculator.flushAvg(prevUser);
+                if (!isFirst) {
+                    writer.write("," + mapper.writeValueAsString(calculator.getAverageModel(prevUser)));
                 } else {
-                    // Handling case when no close tick provided
-                    if (userTicks[0] != null) {
-                        policy.calculate(userTicks[0], userTicks[1], avgObj);
-                    }
-                    if (!isFirst) {
-                        writer.write("," + mapper.writeValueAsString(avgObj));
-                    } else {
-                        writer.write(mapper.writeValueAsString(avgObj));
-                    }
+                    mapper.writeValueAsString(calculator.getAverageModel(prevUser));
                 }
             } catch (IOException e) {
                 LOG.error("Error while calculating average", e);

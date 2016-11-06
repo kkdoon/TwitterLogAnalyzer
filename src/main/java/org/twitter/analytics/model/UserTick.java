@@ -1,6 +1,6 @@
 package org.twitter.analytics.model;
 
-public class UserModel {
+public class UserTick {
     private String userID;
     private long timestamp;
     private String operation;
@@ -41,11 +41,11 @@ public class UserModel {
     public boolean equals(Object obj) {
         if (obj == null) return false;
 
-        if (!(obj instanceof UserModel)) return false;
+        if (!(obj instanceof UserTick)) return false;
 
         if (this == obj) return true;
 
-        UserModel model = (UserModel) obj;
+        UserTick model = (UserTick) obj;
 
         if (this.getUserID() != null && this.getUserID().equals(model.getUserID())) return true;
 
