@@ -1,12 +1,12 @@
 u1, 1, open
-u2, 2, open
-u3, 3, open
+u2, 2, close
+u3, 3, close
 u1, 4, close
 u4, 5, open
 u1, 6, open
 u2, 7, close
 u1, 9, open
-u3, 10, close
+u3, 10, open
 u4, 11, close
 u1, 12, close
 u1, 13, open
@@ -21,3 +21,8 @@ u1, 23, close
 u3, 21, close
 u4, 22, close
 u4, 23, close
+u4, 24, open
+u4, 25, open
+u4, 26, open
+u4, 28, close
+u4, 29, open

@@ -39,8 +39,9 @@ public class FileUtil {
         }
     }
 
-    public static String createTempFile() throws IOException {
-        File tempFile = File.createTempFile("log", ".tmp", new File("/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp"));
+    public static String createTempFile(String dir) throws IOException {
+        if (dir == null) return null;
+        File tempFile = File.createTempFile("log", ".tmp", new File(dir));
         tempFile.deleteOnExit();
         return tempFile.getAbsolutePath();
     }

@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class MergeSortFile {
 
-    private String inputFile, outputFile;
+    private String inputFile, tempPath, outputFile;
     private int maxLines;
     private List<String> tempFiles;
 
@@ -23,8 +23,9 @@ public class MergeSortFile {
 
     }
 
-    public MergeSortFile(String inputFile, String outputFile, int maxLines) {
+    public MergeSortFile(String inputFile, String tempPath, String outputFile, int maxLines) {
         this.inputFile = inputFile;
+        this.tempPath = tempPath;
         this.outputFile = outputFile;
         this.maxLines = maxLines;
         this.tempFiles = new ArrayList<String>();
@@ -48,7 +49,7 @@ public class MergeSortFile {
                 if (count >= maxLines) {
                     Collections.sort(tempList, comparator);
                     // Write data to temp file
-                    tempFiles.add(FileUtil.createTempFile());
+                    tempFiles.add(FileUtil.createTempFile(tempPath));
                     System.out.println("Temp file:" + tempFiles.get(tempFiles.size() - 1));
                     BufferedWriter writer = null;
                     try {
@@ -75,7 +76,7 @@ public class MergeSortFile {
             if (tempList.size() > 0) {
                 Collections.sort(tempList);
                 // Write data to temp file
-                tempFiles.add(FileUtil.createTempFile());
+                tempFiles.add(FileUtil.createTempFile(tempPath));
                 System.out.println("Final Temp file:" + tempFiles.get(tempFiles.size() - 1));
                 BufferedWriter writer = null;
                 try {
@@ -133,25 +134,6 @@ public class MergeSortFile {
             for (BufferedReader br : fileReaders) {
                 FileUtil.closeFile(br);
             }
-        }
-    }
-
-    public static void main(String[] args) {
-        String input = "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/input.txt";
-        String output = "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/output.txt";
-        MergeSortFile obj = new MergeSortFile(input, output, 10);
-        obj.process(new UserLineComparator(), new AvgLogFileComparator());
-        BufferedReader br = null;
-        try {
-            br = FileUtil.openFile(output);
-            BufferedReaderIterator brIter = new BufferedReaderIterator(br);
-            for (String line : brIter) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            FileUtil.closeFile(br);
         }
     }
 }
