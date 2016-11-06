@@ -22,6 +22,7 @@ public class LogAnalyzerService {
         try {
             MAX_LINE_PER_FILE = Integer.parseInt(System.getProperty("MAX_LINE_FILE"));
             MAX_CHARS_READ = Integer.parseInt(System.getProperty("MAX_CHARS_READ"));
+            LOG.info("Max lines per file: " + MAX_LINE_PER_FILE + " Max characters per line: " + MAX_CHARS_READ);
             String policyName = System.getProperty("POLICY_NAME");
             policy = PolicyFactoryUtil.getPolicyInstance(policyName);
             if (policy == null) {

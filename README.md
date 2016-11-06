@@ -7,7 +7,8 @@ Twitter Log Analysis Library
 uses disk storage for computation.
 - Custom analysis can be carried out on the sorted file.
 
-Example:
-- Each line of log file stores 35 bytes of data
-- Memory available is 100 MB
-- Approx. maximum lines per file should be set to 2.85 million lines
+Code tested with following example:
+- Generated 1.4GB data file (7.9 million records)
+- Each line of log file stores around 18 bytes of data
+- Heap memory set to 128 MB
+- Maximum lines per file set to 1 million lines
