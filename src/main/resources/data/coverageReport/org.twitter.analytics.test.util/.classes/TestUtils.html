@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TestUtils</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.twitter.analytics.test.util</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TestUtils (org.twitter.analytics.test.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TestUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.4%
+  </span>
+  <span class="absValue">
+    (38/ 39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.twitter.analytics.test.util;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Assert;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import org.twitter.analytics.model.UserTick;
+<i>6</i>&nbsp;import org.twitter.analytics.policy.OCPolicy;
+<i>7</i>&nbsp;import org.twitter.analytics.util.ParseUtil;
+<i>8</i>&nbsp;import org.twitter.analytics.util.PolicyFactoryUtil;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<b class="fc"><i>11</i>&nbsp; * Created by kkdoon on 11/6/16.</b>
+<i>12</i>&nbsp; */
+<b class="fc"><i>13</i>&nbsp;public class TestUtils {</b>
+<b class="fc"><i>14</i>&nbsp;    @Test</b>
+<b class="fc"><i>15</i>&nbsp;    public void testParseUtil1() {</b>
+<b class="fc"><i>16</i>&nbsp;        String line = &quot; 3  , 50 , open &quot;;</b>
+<b class="fc"><i>17</i>&nbsp;        UserTick tickActual = ParseUtil.parseLogFileLine(line);</b>
+<b class="fc"><i>18</i>&nbsp;        UserTick tickExpected = new UserTick();</b>
+<b class="fc"><i>19</i>&nbsp;        tickExpected.setUserID(&quot;3&quot;);</b>
+<b class="fc"><i>20</i>&nbsp;        tickExpected.setTimestamp(50);</b>
+<b class="fc"><i>21</i>&nbsp;        tickExpected.setOperation(&quot;open&quot;);</b>
+<b class="fc"><i>22</i>&nbsp;</b>
+<b class="fc"><i>23</i>&nbsp;        Assert.assertEquals(tickExpected.getUserID(), tickActual.getUserID());</b>
+<b class="fc"><i>24</i>&nbsp;        Assert.assertEquals(tickExpected.getTimestamp(), tickActual.getTimestamp());</b>
+<b class="fc"><i>25</i>&nbsp;        Assert.assertEquals(tickExpected.getOperation(), tickActual.getOperation());</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<b class="fc"><i>28</i>&nbsp;    @Test</b>
+<b class="fc"><i>29</i>&nbsp;    public void testParseUtil2() {</b>
+<b class="fc"><i>30</i>&nbsp;        String line = &quot; user3  , 501 , open, extra &quot;;</b>
+<b class="fc"><i>31</i>&nbsp;        UserTick tickActual = ParseUtil.parseLogFileLine(line);</b>
+<b class="fc"><i>32</i>&nbsp;        UserTick tickExpected = new UserTick();</b>
+<b class="fc"><i>33</i>&nbsp;        tickExpected.setUserID(&quot;user3&quot;);</b>
+<b class="fc"><i>34</i>&nbsp;        tickExpected.setTimestamp(501);</b>
+<b class="fc"><i>35</i>&nbsp;        tickExpected.setOperation(&quot;open&quot;);</b>
+<b class="fc"><i>36</i>&nbsp;</b>
+<b class="fc"><i>37</i>&nbsp;        Assert.assertEquals(tickExpected.getUserID(), tickActual.getUserID());</b>
+<b class="fc"><i>38</i>&nbsp;        Assert.assertEquals(tickExpected.getTimestamp(), tickActual.getTimestamp());</b>
+<b class="fc"><i>39</i>&nbsp;        Assert.assertEquals(tickExpected.getOperation(), tickActual.getOperation());</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<b class="fc"><i>42</i>&nbsp;    @Test</b>
+<b class="fc"><i>43</i>&nbsp;    public void testParseUtil3() {</b>
+<b class="fc"><i>44</i>&nbsp;        String line = &quot; user3  , abcd , open, extra &quot;;</b>
+<b class="fc"><i>45</i>&nbsp;        UserTick tickActual = ParseUtil.parseLogFileLine(line);</b>
+<b class="fc"><i>46</i>&nbsp;        Assert.assertNull(tickActual);</b>
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    @Test
+<i>50</i>&nbsp;    public void testPolicyFactory(){
+<b class="fc"><i>51</i>&nbsp;        Object obj = PolicyFactoryUtil.getPolicyInstance(&quot;DefaultOCPolicy&quot;);</b>
+<b class="fc"><i>52</i>&nbsp;        if(obj instanceof OCPolicy){</b>
+<b class="fc"><i>53</i>&nbsp;            Assert.assertTrue(true);</b>
+<i>54</i>&nbsp;        }else{
+<b class="nc"><i>55</i>&nbsp;            Assert.assertTrue(false);</b>
+<i>56</i>&nbsp;        }
+<b class="fc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2016-11-06 02:07</div>
+</div>
+</body>
+</html>

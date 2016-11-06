@@ -4,9 +4,7 @@ import org.apache.log4j.Logger;
 import org.twitter.analytics.model.AvgResponseModel;
 import org.twitter.analytics.model.UserAvgTimeModel;
 import org.twitter.analytics.model.UserTick;
-import org.twitter.analytics.policy.DefaultOCPolicy;
 import org.twitter.analytics.policy.OCPolicy;
-import org.twitter.analytics.util.PolicyFactoryUtil;
 
 import java.util.HashMap;
 import java.util.Map;

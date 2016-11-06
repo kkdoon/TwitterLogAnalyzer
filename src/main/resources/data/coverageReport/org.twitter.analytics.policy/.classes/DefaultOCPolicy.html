@@ -1,0 +1,140 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DefaultOCPolicy</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.twitter.analytics.policy</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DefaultOCPolicy (org.twitter.analytics.policy)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DefaultOCPolicy</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70%
+  </span>
+  <span class="absValue">
+    (14/ 20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.twitter.analytics.policy;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.apache.log4j.Logger;
+<i>4</i>&nbsp;import org.twitter.analytics.model.AvgResponseModel;
+<i>5</i>&nbsp;import org.twitter.analytics.model.Operation;
+<i>6</i>&nbsp;import org.twitter.analytics.model.UserTick;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * Created by kkdoon on 11/5/16.
+<i>10</i>&nbsp; */
+<b class="fc"><i>11</i>&nbsp;public class DefaultOCPolicy implements OCPolicy {</b>
+<b class="fc"><i>12</i>&nbsp;    private final static Logger LOG = Logger.getLogger(DefaultOCPolicy.class);</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    public AvgResponseModel calculate(final UserTick oldTick, final UserTick newTick) {
+<b class="fc"><i>15</i>&nbsp;        if (oldTick == null || newTick == null) {</b>
+<i>16</i>&nbsp;            //LOG.warn(&quot;Skipping tick pair as sufficient info not provided &quot; + (avgObj != null ? &quot; user: &quot; + avgObj.getUserId() : &quot;&quot;));
+<b class="fc"><i>17</i>&nbsp;            LOG.warn(&quot;Skipping tick pair as sufficient info not provided&quot;);</b>
+<b class="fc"><i>18</i>&nbsp;            return null;</b>
+<i>19</i>&nbsp;        }
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;        AvgResponseModel response = new AvgResponseModel();</b>
+<b class="fc"><i>22</i>&nbsp;        Operation op1 = Operation.valueOf(oldTick.getOperation());</b>
+<b class="fc"><i>23</i>&nbsp;        Operation op2 = Operation.valueOf(newTick.getOperation());</b>
+<i>24</i>&nbsp;
+<b class="fc"><i>25</i>&nbsp;        if (Operation.open == op1 &amp;&amp; Operation.close == op2) {</b>
+<b class="fc"><i>26</i>&nbsp;            response.setInterval(newTick.getTimestamp() - oldTick.getTimestamp());</b>
+<i>27</i>&nbsp;            //calculateAvg(interval, avgObj);
+<b class="fc"><i>28</i>&nbsp;        } else if (Operation.open == op1 &amp;&amp; Operation.open == op2) {</b>
+<b class="fc"><i>29</i>&nbsp;            response.setInterval(newTick.getTimestamp() - oldTick.getTimestamp());</b>
+<i>30</i>&nbsp;            //calculateAvg(interval, avgObj);
+<i>31</i>&nbsp;            // Setting next open tick
+<i>32</i>&nbsp;            //nextTick = newTick;
+<b class="fc"><i>33</i>&nbsp;            response.setNextUserTick(newTick);</b>
+<b class="nc"><i>34</i>&nbsp;        } else if (Operation.close == op1 &amp;&amp; Operation.open == op2) {</b>
+<i>35</i>&nbsp;            // Setting next open tick and not setting any average
+<i>36</i>&nbsp;            //nextTick = newTick;
+<b class="nc"><i>37</i>&nbsp;            response.setNextUserTick(newTick);</b>
+<b class="nc"><i>38</i>&nbsp;        } else if (Operation.close == op1 &amp;&amp; Operation.close == op2) {</b>
+<i>39</i>&nbsp;            //long interval = newTick.getTimestamp() - oldTick.getTimestamp();
+<i>40</i>&nbsp;            //calculateAvg(interval, avgObj);
+<b class="nc"><i>41</i>&nbsp;            response.setInterval(newTick.getTimestamp() - oldTick.getTimestamp());</b>
+<i>42</i>&nbsp;        } else {
+<i>43</i>&nbsp;            // Action types cannot be resolved
+<b class="nc"><i>44</i>&nbsp;            LOG.warn(&quot;Skipping tick pair as cannot determine action types&quot;);</b>
+<b class="nc"><i>45</i>&nbsp;            return null;</b>
+<i>46</i>&nbsp;        }
+<i>47</i>&nbsp;
+<b class="fc"><i>48</i>&nbsp;        return response;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /*private static void calculateAvg(long interval, UserAvgTimeModel avgObj) {
+<i>52</i>&nbsp;        long count = avgObj.getCount() + 1;
+<i>53</i>&nbsp;        avgObj.setAverage(AverageCalculator.calculate(avgObj.getAverage(), interval, count));
+<i>54</i>&nbsp;        avgObj.setCount(count);
+<i>55</i>&nbsp;    }*/
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2016-11-06 02:07</div>
+</div>
+</body>
+</html>

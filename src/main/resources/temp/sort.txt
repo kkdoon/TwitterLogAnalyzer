@@ -1,0 +1,6 @@
+u1, 1, open
+u1, 3, close
+u2, 2, open
+u2, 6, open
+u3, 4, open
+u3, 5, close

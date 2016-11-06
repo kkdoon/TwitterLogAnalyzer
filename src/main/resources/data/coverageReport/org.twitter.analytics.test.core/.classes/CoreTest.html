@@ -1,0 +1,205 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CoreTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.twitter.analytics.test.core</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CoreTest (org.twitter.analytics.test.core)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CoreTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (71/ 71)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.twitter.analytics.test.core;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Assert;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import org.twitter.analytics.comparator.AvgLogFileComparator;
+<i>6</i>&nbsp;import org.twitter.analytics.comparator.UserLineComparator;
+<i>7</i>&nbsp;import org.twitter.analytics.core.AverageCalculator;
+<i>8</i>&nbsp;import org.twitter.analytics.core.MergeSortFile;
+<i>9</i>&nbsp;import org.twitter.analytics.core.SortedAvgWriter;
+<i>10</i>&nbsp;import org.twitter.analytics.iterator.BufferedReaderIterator;
+<i>11</i>&nbsp;import org.twitter.analytics.model.UserTick;
+<i>12</i>&nbsp;import org.twitter.analytics.policy.DefaultOCPolicy;
+<i>13</i>&nbsp;import org.twitter.analytics.util.FileUtil;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import java.io.BufferedReader;
+<i>16</i>&nbsp;import java.io.IOException;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;/**
+<i>19</i>&nbsp; * Created by kkdoon on 11/6/16.
+<i>20</i>&nbsp; */
+<b class="fc"><i>21</i>&nbsp;public class CoreTest {</b>
+<i>22</i>&nbsp;    @Test
+<i>23</i>&nbsp;    public void testAvgCalculator1() {
+<b class="fc"><i>24</i>&nbsp;        AverageCalculator obj = new AverageCalculator(new DefaultOCPolicy());</b>
+<b class="fc"><i>25</i>&nbsp;        UserTick tick1 = new UserTick();</b>
+<b class="fc"><i>26</i>&nbsp;        tick1.setUserID(&quot;1&quot;);</b>
+<b class="fc"><i>27</i>&nbsp;        tick1.setTimestamp(1);</b>
+<b class="fc"><i>28</i>&nbsp;        tick1.setOperation(&quot;open&quot;);</b>
+<b class="fc"><i>29</i>&nbsp;        obj.addTick(tick1);</b>
+<i>30</i>&nbsp;
+<b class="fc"><i>31</i>&nbsp;        UserTick tick2 = new UserTick();</b>
+<b class="fc"><i>32</i>&nbsp;        tick2.setUserID(&quot;1&quot;);</b>
+<b class="fc"><i>33</i>&nbsp;        tick2.setTimestamp(2);</b>
+<b class="fc"><i>34</i>&nbsp;        tick2.setOperation(&quot;close&quot;);</b>
+<b class="fc"><i>35</i>&nbsp;        obj.addTick(tick2);</b>
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;        UserTick tick3 = new UserTick();</b>
+<b class="fc"><i>38</i>&nbsp;        tick3.setUserID(&quot;2&quot;);</b>
+<b class="fc"><i>39</i>&nbsp;        tick3.setTimestamp(1);</b>
+<b class="fc"><i>40</i>&nbsp;        tick3.setOperation(&quot;open&quot;);</b>
+<b class="fc"><i>41</i>&nbsp;        obj.addTick(tick3);</b>
+<i>42</i>&nbsp;
+<b class="fc"><i>43</i>&nbsp;        UserTick tick4 = new UserTick();</b>
+<b class="fc"><i>44</i>&nbsp;        tick4.setUserID(&quot;2&quot;);</b>
+<b class="fc"><i>45</i>&nbsp;        tick4.setTimestamp(2);</b>
+<b class="fc"><i>46</i>&nbsp;        tick4.setOperation(&quot;close&quot;);</b>
+<b class="fc"><i>47</i>&nbsp;        obj.addTick(tick4);</b>
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;        Assert.assertEquals(obj.getAverage(&quot;1&quot;), 1.0, 0.0);</b>
+<b class="fc"><i>50</i>&nbsp;        Assert.assertEquals(obj.getAverage(&quot;2&quot;), 1.0, 0.0);</b>
+<b class="fc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    @Test
+<i>54</i>&nbsp;    public void testAvgCalculator2() {
+<b class="fc"><i>55</i>&nbsp;        AverageCalculator obj = new AverageCalculator(new DefaultOCPolicy());</b>
+<b class="fc"><i>56</i>&nbsp;        UserTick tick1 = new UserTick();</b>
+<b class="fc"><i>57</i>&nbsp;        tick1.setUserID(&quot;1&quot;);</b>
+<b class="fc"><i>58</i>&nbsp;        tick1.setTimestamp(1);</b>
+<b class="fc"><i>59</i>&nbsp;        tick1.setOperation(&quot;open&quot;);</b>
+<b class="fc"><i>60</i>&nbsp;        obj.addTick(tick1);</b>
+<i>61</i>&nbsp;
+<b class="fc"><i>62</i>&nbsp;        UserTick tick2 = new UserTick();</b>
+<b class="fc"><i>63</i>&nbsp;        tick2.setUserID(&quot;1&quot;);</b>
+<b class="fc"><i>64</i>&nbsp;        tick2.setTimestamp(2);</b>
+<b class="fc"><i>65</i>&nbsp;        tick2.setOperation(&quot;open&quot;);</b>
+<b class="fc"><i>66</i>&nbsp;        obj.addTick(tick2);</b>
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;        UserTick tick3 = new UserTick();</b>
+<b class="fc"><i>69</i>&nbsp;        tick3.setUserID(&quot;1&quot;);</b>
+<b class="fc"><i>70</i>&nbsp;        tick3.setTimestamp(3);</b>
+<b class="fc"><i>71</i>&nbsp;        tick3.setOperation(&quot;close&quot;);</b>
+<b class="fc"><i>72</i>&nbsp;        obj.addTick(tick3);</b>
+<i>73</i>&nbsp;
+<b class="fc"><i>74</i>&nbsp;        UserTick tick4 = new UserTick();</b>
+<b class="fc"><i>75</i>&nbsp;        tick4.setUserID(&quot;1&quot;);</b>
+<b class="fc"><i>76</i>&nbsp;        tick4.setTimestamp(4);</b>
+<b class="fc"><i>77</i>&nbsp;        tick4.setOperation(&quot;close&quot;);</b>
+<b class="fc"><i>78</i>&nbsp;        obj.addTick(tick4);</b>
+<i>79</i>&nbsp;
+<b class="fc"><i>80</i>&nbsp;        obj.flushAvg(&quot;1&quot;);</b>
+<i>81</i>&nbsp;
+<b class="fc"><i>82</i>&nbsp;        Assert.assertEquals(obj.getAverage(&quot;1&quot;), 1.0, 0.0);</b>
+<b class="fc"><i>83</i>&nbsp;    }</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    @Test
+<i>86</i>&nbsp;    public void testMergeSort() throws IOException {
+<b class="fc"><i>87</i>&nbsp;        String sortFile = &quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/sort.txt&quot;;</b>
+<b class="fc"><i>88</i>&nbsp;        FileUtil.deleteFile(sortFile);</b>
+<b class="fc"><i>89</i>&nbsp;        MergeSortFile obj = new MergeSortFile(&quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/testInput.txt&quot;, &quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/&quot;, sortFile, 2, 30);</b>
+<b class="fc"><i>90</i>&nbsp;        obj.process(new UserLineComparator(), new AvgLogFileComparator());</b>
+<i>91</i>&nbsp;
+<b class="fc"><i>92</i>&nbsp;        BufferedReader reader = FileUtil.openFile(sortFile);</b>
+<b class="fc"><i>93</i>&nbsp;        BufferedReaderIterator brIter = new BufferedReaderIterator(reader, 30);</b>
+<b class="fc"><i>94</i>&nbsp;        String[] list = {&quot;u1, 1, open&quot;,</b>
+<i>95</i>&nbsp;                &quot;u1, 3, close&quot;,
+<i>96</i>&nbsp;                &quot;u2, 2, open&quot;,
+<i>97</i>&nbsp;                &quot;u2, 6, open&quot;,
+<i>98</i>&nbsp;                &quot;u3, 4, open&quot;,
+<i>99</i>&nbsp;                &quot;u3, 5, close&quot;};
+<b class="fc"><i>100</i>&nbsp;        int index = 0;</b>
+<b class="fc"><i>101</i>&nbsp;        for (String line : brIter) {</b>
+<b class="fc"><i>102</i>&nbsp;            Assert.assertEquals(list[index++], line);</b>
+<b class="fc"><i>103</i>&nbsp;        }</b>
+<b class="fc"><i>104</i>&nbsp;    }</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    @Test
+<i>107</i>&nbsp;    public void testSortedWriter() throws IOException {
+<i>108</i>&nbsp;        //MergeSortFile obj = new MergeSortFile(&quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/testInput.txt&quot;, &quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/&quot;, &quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/sort.txt&quot;, 2, 30);
+<i>109</i>&nbsp;        //obj.process(new UserLineComparator(), new AvgLogFileComparator());
+<b class="fc"><i>110</i>&nbsp;        String sortFile = &quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/sort.txt&quot;;</b>
+<b class="fc"><i>111</i>&nbsp;        String resultFile = &quot;/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/result.txt&quot;;</b>
+<b class="fc"><i>112</i>&nbsp;        SortedAvgWriter obj = new SortedAvgWriter(sortFile, resultFile, new DefaultOCPolicy(), 30);</b>
+<b class="fc"><i>113</i>&nbsp;        obj.process();</b>
+<b class="fc"><i>114</i>&nbsp;        BufferedReader reader = FileUtil.openFile(resultFile);</b>
+<b class="fc"><i>115</i>&nbsp;        BufferedReaderIterator brIter = new BufferedReaderIterator(reader, 30);</b>
+<b class="fc"><i>116</i>&nbsp;        String expected = &quot;[{\&quot;userId\&quot;:\&quot;u1\&quot;,\&quot;average\&quot;:2.0},{\&quot;userId\&quot;:\&quot;u2\&quot;,\&quot;average\&quot;:4.0},{\&quot;userId\&quot;:\&quot;u3\&quot;,\&quot;average\&quot;:1.0}]&quot;;</b>
+<b class="fc"><i>117</i>&nbsp;        String actual = brIter.iterator().next();</b>
+<b class="fc"><i>118</i>&nbsp;        Assert.assertEquals(expected, actual);</b>
+<b class="fc"><i>119</i>&nbsp;    }</b>
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2016-11-06 02:07</div>
+</div>
+</body>
+</html>

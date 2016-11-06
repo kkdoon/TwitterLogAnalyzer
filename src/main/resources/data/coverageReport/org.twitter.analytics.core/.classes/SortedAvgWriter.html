@@ -1,0 +1,190 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SortedAvgWriter</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.twitter.analytics.core</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SortedAvgWriter (org.twitter.analytics.core)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SortedAvgWriter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84.2%
+  </span>
+  <span class="absValue">
+    (48/ 57)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.twitter.analytics.core;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.apache.log4j.Logger;
+<i>4</i>&nbsp;import org.codehaus.jackson.map.ObjectMapper;
+<i>5</i>&nbsp;import org.twitter.analytics.iterator.BufferedReaderIterator;
+<i>6</i>&nbsp;import org.twitter.analytics.model.UserTick;
+<i>7</i>&nbsp;import org.twitter.analytics.policy.OCPolicy;
+<i>8</i>&nbsp;import org.twitter.analytics.util.FileUtil;
+<i>9</i>&nbsp;import org.twitter.analytics.util.ParseUtil;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.io.BufferedReader;
+<i>12</i>&nbsp;import java.io.BufferedWriter;
+<i>13</i>&nbsp;import java.io.IOException;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * Created by kkdoon on 11/6/16.
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class SortedAvgWriter {
+<b class="fc"><i>19</i>&nbsp;    private final static Logger LOG = Logger.getLogger(SortedAvgWriter.class);</b>
+<i>20</i>&nbsp;    private String sortOutput;
+<i>21</i>&nbsp;    private String resultOutput;
+<i>22</i>&nbsp;    private int maxCharsRead;
+<i>23</i>&nbsp;    private String prevUser, currentUser;
+<i>24</i>&nbsp;    private AverageCalculator calculator;
+<i>25</i>&nbsp;    private ObjectMapper mapper;
+<i>26</i>&nbsp;    private  boolean isFirst;
+<i>27</i>&nbsp;
+<b class="fc"><i>28</i>&nbsp;    public SortedAvgWriter(String sortOutput, String resultOutput, OCPolicy policy, int maxCharsRead) {</b>
+<b class="fc"><i>29</i>&nbsp;        this.sortOutput = sortOutput;</b>
+<b class="fc"><i>30</i>&nbsp;        this.resultOutput = resultOutput;</b>
+<b class="fc"><i>31</i>&nbsp;        this.maxCharsRead = maxCharsRead;</b>
+<b class="fc"><i>32</i>&nbsp;        prevUser = null;</b>
+<b class="fc"><i>33</i>&nbsp;        currentUser = null;</b>
+<b class="fc"><i>34</i>&nbsp;        calculator = new AverageCalculator(policy);</b>
+<b class="fc"><i>35</i>&nbsp;        mapper = new ObjectMapper();</b>
+<b class="fc"><i>36</i>&nbsp;        isFirst = true;</b>
+<b class="fc"><i>37</i>&nbsp;    }</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    public void process() {
+<b class="fc"><i>40</i>&nbsp;        BufferedReader br = null;</b>
+<i>41</i>&nbsp;        try {
+<b class="fc"><i>42</i>&nbsp;            br = FileUtil.openFile(sortOutput);</b>
+<b class="fc"><i>43</i>&nbsp;            BufferedReaderIterator brIter = new BufferedReaderIterator(br, maxCharsRead);</b>
+<b class="fc"><i>44</i>&nbsp;            BufferedWriter writer = null;</b>
+<i>45</i>&nbsp;            try {
+<b class="fc"><i>46</i>&nbsp;                writer = FileUtil.getFileWriter(resultOutput);</b>
+<b class="fc"><i>47</i>&nbsp;                writer.write(&quot;[&quot;);</b>
+<b class="fc"><i>48</i>&nbsp;                for (String line : brIter) {</b>
+<b class="fc"><i>49</i>&nbsp;                    handleLine(line, writer);</b>
+<b class="fc"><i>50</i>&nbsp;                }</b>
+<i>51</i>&nbsp;                // Writing average value for last user
+<b class="fc"><i>52</i>&nbsp;                writeResponse(writer);</b>
+<b class="nc"><i>53</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>54</i>&nbsp;                LOG.error(&quot;Error while writing to result file&quot;, e);</b>
+<i>55</i>&nbsp;            } finally {
+<b class="nc"><i>56</i>&nbsp;                try {</b>
+<b class="fc"><i>57</i>&nbsp;                    writer.write(&quot;]&quot;);</b>
+<b class="nc"><i>58</i>&nbsp;                } catch (IOException e) {</b>
+<b class="nc"><i>59</i>&nbsp;                    LOG.error(&quot;Error while writing to result file&quot;, e);</b>
+<b class="fc"><i>60</i>&nbsp;                }</b>
+<b class="fc"><i>61</i>&nbsp;                FileUtil.closeFile(writer);</b>
+<b class="fc"><i>62</i>&nbsp;            }</b>
+<b class="nc"><i>63</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>64</i>&nbsp;            LOG.error(&quot;Error while opening sorted file&quot;, e);</b>
+<i>65</i>&nbsp;        } finally {
+<b class="fc"><i>66</i>&nbsp;            FileUtil.closeFile(br);</b>
+<b class="fc"><i>67</i>&nbsp;        }</b>
+<b class="fc"><i>68</i>&nbsp;    }</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    private void handleLine(String line, BufferedWriter writer) throws IOException {
+<b class="fc"><i>71</i>&nbsp;        if (line == null) return;</b>
+<i>72</i>&nbsp;
+<b class="fc"><i>73</i>&nbsp;        UserTick curr = ParseUtil.parseLogFileLine(line);</b>
+<b class="fc"><i>74</i>&nbsp;        if (curr == null) {</b>
+<b class="nc"><i>75</i>&nbsp;            LOG.warn(&quot;Skipping line as cannot be parsed: &quot; + line);</b>
+<b class="nc"><i>76</i>&nbsp;            return;</b>
+<i>77</i>&nbsp;        }
+<i>78</i>&nbsp;
+<b class="fc"><i>79</i>&nbsp;        currentUser = curr.getUserID();</b>
+<i>80</i>&nbsp;
+<b class="fc"><i>81</i>&nbsp;        if (prevUser == null) {</b>
+<b class="fc"><i>82</i>&nbsp;            prevUser = currentUser;</b>
+<b class="fc"><i>83</i>&nbsp;            calculator.addTick(curr);</b>
+<b class="fc"><i>84</i>&nbsp;            return;</b>
+<i>85</i>&nbsp;        }
+<i>86</i>&nbsp;
+<b class="fc"><i>87</i>&nbsp;        if (prevUser.equals(currentUser)) {</b>
+<b class="fc"><i>88</i>&nbsp;            calculator.addTick(curr);</b>
+<i>89</i>&nbsp;        } else {
+<b class="fc"><i>90</i>&nbsp;            writeResponse(writer);</b>
+<b class="fc"><i>91</i>&nbsp;            prevUser = currentUser;</b>
+<b class="fc"><i>92</i>&nbsp;            calculator.addTick(curr);</b>
+<i>93</i>&nbsp;        }
+<b class="fc"><i>94</i>&nbsp;    }</b>
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    private void writeResponse(BufferedWriter writer) throws IOException {
+<i>97</i>&nbsp;        // Handling case when no close tick provided
+<b class="fc"><i>98</i>&nbsp;        calculator.flushAvg(prevUser);</b>
+<i>99</i>&nbsp;        // Write user average data
+<b class="fc"><i>100</i>&nbsp;        if (!isFirst) {</b>
+<b class="fc"><i>101</i>&nbsp;            writer.write(&quot;,&quot; + mapper.writeValueAsString(calculator.getAverageModel(prevUser)));</b>
+<i>102</i>&nbsp;        } else {
+<b class="fc"><i>103</i>&nbsp;            writer.write(mapper.writeValueAsString(calculator.getAverageModel(prevUser)));</b>
+<b class="fc"><i>104</i>&nbsp;            isFirst = false;</b>
+<i>105</i>&nbsp;        }
+<b class="fc"><i>106</i>&nbsp;    }</b>
+<i>107</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2016-11-06 02:07</div>
+</div>
+</body>
+</html>

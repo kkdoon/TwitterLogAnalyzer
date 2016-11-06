@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FileUtil</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.twitter.analytics.util</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FileUtil (org.twitter.analytics.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileUtil</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (21/ 28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.twitter.analytics.util;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.*;
+<i>4</i>&nbsp;
+<b class="nc"><i>5</i>&nbsp;public class FileUtil {</b>
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;    public static BufferedReader openFile(String filePath) throws FileNotFoundException {
+<b class="fc"><i>8</i>&nbsp;        if (filePath != null) {</b>
+<b class="fc"><i>9</i>&nbsp;            return new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));</b>
+<i>10</i>&nbsp;        }
+<b class="nc"><i>11</i>&nbsp;        return null;</b>
+<i>12</i>&nbsp;    }
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    public static BufferedWriter getFileWriter(String filePath) throws IOException {
+<b class="fc"><i>15</i>&nbsp;        if (filePath != null) {</b>
+<b class="fc"><i>16</i>&nbsp;            return new BufferedWriter(new FileWriter(filePath, false));</b>
+<i>17</i>&nbsp;        }
+<b class="nc"><i>18</i>&nbsp;        return null;</b>
+<i>19</i>&nbsp;    }
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    public static void closeFile(BufferedReader br) {
+<b class="fc"><i>22</i>&nbsp;        if (br != null) {</b>
+<i>23</i>&nbsp;            try {
+<b class="fc"><i>24</i>&nbsp;                br.close();</b>
+<b class="nc"><i>25</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>26</i>&nbsp;                e.printStackTrace();</b>
+<b class="fc"><i>27</i>&nbsp;            }</b>
+<i>28</i>&nbsp;        }
+<b class="fc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    public static void closeFile(BufferedWriter br) {
+<b class="fc"><i>32</i>&nbsp;        if (br != null) {</b>
+<i>33</i>&nbsp;            try {
+<b class="fc"><i>34</i>&nbsp;                br.flush();</b>
+<b class="fc"><i>35</i>&nbsp;                br.close();</b>
+<b class="nc"><i>36</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>37</i>&nbsp;                e.printStackTrace();</b>
+<b class="fc"><i>38</i>&nbsp;            }</b>
+<i>39</i>&nbsp;        }
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    public static String createTempFile(String dir) throws IOException {
+<b class="fc"><i>43</i>&nbsp;        if (dir == null) return null;</b>
+<b class="fc"><i>44</i>&nbsp;        File tempFile = File.createTempFile(&quot;log&quot;, &quot;.tmp&quot;, new File(dir));</b>
+<b class="fc"><i>45</i>&nbsp;        tempFile.deleteOnExit();</b>
+<b class="fc"><i>46</i>&nbsp;        return tempFile.getAbsolutePath();</b>
+<i>47</i>&nbsp;    }
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    public static void deleteFile(String file) {
+<b class="fc"><i>50</i>&nbsp;        if (file != null) {</b>
+<b class="fc"><i>51</i>&nbsp;            File delFile = new File(file);</b>
+<b class="fc"><i>52</i>&nbsp;            delFile.delete();</b>
+<i>53</i>&nbsp;        }
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2016-11-06 02:07</div>
+</div>
+</body>
+</html>

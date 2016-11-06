@@ -18,8 +18,8 @@ public class MergeSortFile {
     private int maxLines, maxCharsRead;
     private List<String> tempFiles;
 
+    // Private constructor to force client to use parametrized constructor
     private MergeSortFile() {
-
     }
 
     public MergeSortFile(String inputFile, String tempPath, String outputFile, int maxLines, int maxCharsRead) {
@@ -38,7 +38,7 @@ public class MergeSortFile {
 
     private void partitionFiles(Comparator<String> comparator) {
         LOG.info("Starting file partitioning");
-        int count = 0, totalCount = 0;
+        int count = 0;
         BufferedReader br = null;
         List<String> tempList;
         try {
@@ -46,57 +46,15 @@ public class MergeSortFile {
             tempList = new ArrayList<String>();
             BufferedReaderIterator brIter = new BufferedReaderIterator(br, maxCharsRead);
             for (String line : brIter) {
-                totalCount++;
                 if (count >= maxLines) {
-                    Collections.sort(tempList, comparator);
-                    // Write data to temp file
-                    tempFiles.add(FileUtil.createTempFile(tempPath));
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Temp file:" + tempFiles.get(tempFiles.size() - 1));
-                    }
-                    BufferedWriter writer = null;
-                    try {
-                        writer = FileUtil.getFileWriter(tempFiles.get(tempFiles.size() - 1));
-                        for (String writeLine : tempList) {
-                            if (writeLine != null && !writeLine.isEmpty()) {
-                                writer.write(writeLine);
-                                writer.newLine();
-                            }
-                        }
-                    } catch (IOException e) {
-                        LOG.error("Error while partitioning file", e);
-                    } finally {
-                        FileUtil.closeFile(writer);
-                        count = 0;
-                        tempList.clear();
-                    }
+                    writePartitionFile(tempList, comparator);
+                    count = 0;
                 }
                 tempList.add(line);
                 count++;
             }
             if (tempList.size() > 0) {
-                Collections.sort(tempList);
-                // Write data to temp file
-                tempFiles.add(FileUtil.createTempFile(tempPath));
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Final Temp file:" + tempFiles.get(tempFiles.size() - 1));
-                }
-                BufferedWriter writer = null;
-                try {
-                    writer = FileUtil.getFileWriter(tempFiles.get(tempFiles.size() - 1));
-                    for (String writeLine : tempList) {
-                        if (writeLine != null && !writeLine.isEmpty()) {
-                            writer.write(writeLine);
-                            writer.newLine();
-                        }
-                    }
-                } catch (IOException e) {
-                    LOG.error("Error while partitioning file", e);
-                } finally {
-                    FileUtil.closeFile(writer);
-                    count = 0;
-                    tempList.clear();
-                }
+                writePartitionFile(tempList, comparator);
             }
         } catch (IOException e) {
             LOG.error("Error while partitioning files", e);
@@ -104,6 +62,30 @@ public class MergeSortFile {
             FileUtil.closeFile(br);
         }
         LOG.info("File partitioning ended");
+    }
+
+    private void writePartitionFile(List<String> tempList, Comparator<String> comparator) throws IOException {
+        Collections.sort(tempList, comparator);
+        // Write data to temp file
+        tempFiles.add(FileUtil.createTempFile(tempPath));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Temp file:" + tempFiles.get(tempFiles.size() - 1));
+        }
+        BufferedWriter writer = null;
+        try {
+            writer = FileUtil.getFileWriter(tempFiles.get(tempFiles.size() - 1));
+            for (String writeLine : tempList) {
+                if (writeLine != null && !writeLine.isEmpty()) {
+                    writer.write(writeLine);
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Error while partitioning file", e);
+        } finally {
+            FileUtil.closeFile(writer);
+            tempList.clear();
+        }
     }
 
     private void mergeFiles(Comparator<BufferedReaderIterator> comparator) {
