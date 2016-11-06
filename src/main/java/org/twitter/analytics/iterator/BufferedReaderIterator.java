@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * Created by kkdoon on 11/4/16.
+ * Iterator class to read lines from given file sequentially.
  */
 public class BufferedReaderIterator implements Iterable<String> {
     private final static Logger LOG = Logger.getLogger(BufferedReaderIterator.class);
@@ -56,6 +56,11 @@ public class BufferedReaderIterator implements Iterable<String> {
         };
     }
 
+    /**
+     * Reads current line from file and resets the iterator to point back to current line
+     *
+     * @return
+     */
     public String getCurrentLineForComparison() {
         try {
             r.mark(maxCharsRead);

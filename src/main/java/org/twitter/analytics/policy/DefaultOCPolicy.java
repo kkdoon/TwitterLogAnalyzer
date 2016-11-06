@@ -6,7 +6,7 @@ import org.twitter.analytics.model.Operation;
 import org.twitter.analytics.model.UserTick;
 
 /**
- * Created by kkdoon on 11/5/16.
+ * Default policy to handle open/close pairs.
  */
 public class DefaultOCPolicy implements OCPolicy {
     private final static Logger LOG = Logger.getLogger(DefaultOCPolicy.class);

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by kkdoon on 11/4/16.
+ * Core class to apply external merge sort on a given file. Uses disk to sort file so that RAM usage is optimized.
  */
 public class MergeSortFile {
     private final static Logger LOG = Logger.getLogger(MergeSortFile.class);
@@ -31,11 +31,22 @@ public class MergeSortFile {
         this.tempFiles = new ArrayList<String>();
     }
 
+    /**
+     * Computes merge-sort on given file
+     *
+     * @param comparator1
+     * @param comparator2
+     */
     public void process(Comparator<String> comparator1, Comparator<BufferedReaderIterator> comparator2) {
         partitionFiles(comparator1);
         mergeFiles(comparator2);
     }
 
+    /**
+     * Partitions given file based on RAM available (maxLine property initialized by client). Each file is sorted indiviually
+     *
+     * @param comparator
+     */
     private void partitionFiles(Comparator<String> comparator) {
         LOG.info("Starting file partitioning");
         int count = 0;
@@ -88,10 +99,17 @@ public class MergeSortFile {
         }
     }
 
+    /**
+     * Merges sorted partitioned files
+     *
+     * @param comparator
+     */
     private void mergeFiles(Comparator<BufferedReaderIterator> comparator) {
+        // Heap is used to store reference to each temp partitioned file
         PriorityQueue<BufferedReaderIterator> queue = new PriorityQueue<BufferedReaderIterator>(tempFiles.size(), comparator);
         BufferedReader[] fileReaders = new BufferedReader[tempFiles.size()];
         int count = 0;
+        // Adding file references to heap
         for (String tempFile : tempFiles) {
             try {
                 fileReaders[count] = FileUtil.openFile(tempFile);
@@ -106,9 +124,11 @@ public class MergeSortFile {
         try {
             writer = FileUtil.getFileWriter(outputFile);
             while (queue.size() > 0) {
+                // Retrieving line in sorted sequence
                 BufferedReaderIterator currIter = queue.poll();
                 writer.write(currIter.iterator().next());
                 writer.newLine();
+                // Adding file reference back to heap, if end of file not reached
                 if (currIter.iterator().hasNext()) {
                     queue.offer(currIter);
                 }

@@ -6,7 +6,7 @@ import org.twitter.analytics.util.ParseUtil;
 import java.util.Comparator;
 
 /**
- * Created by kkdoon on 11/5/16.
+ * Comparator class to compare 2 lines containing user activity data.
  */
 public class UserLineComparator implements Comparator<String> {
 

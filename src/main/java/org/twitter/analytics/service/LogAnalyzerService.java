@@ -10,6 +10,9 @@ import org.twitter.analytics.policy.OCPolicy;
 import org.twitter.analytics.util.Constants;
 import org.twitter.analytics.util.PolicyFactoryUtil;
 
+/**
+ * Service to calculate user average value from given log file. Service sorts the given file and then calculates the average value.
+ */
 public class LogAnalyzerService {
     private final static Logger LOG = Logger.getLogger(LogAnalyzerService.class);
     private static final int MAX_LINE_PER_FILE, MAX_CHARS_READ;

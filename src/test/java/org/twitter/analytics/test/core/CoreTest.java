@@ -105,8 +105,6 @@ public class CoreTest {
 
     @Test
     public void testSortedWriter() throws IOException {
-        //MergeSortFile obj = new MergeSortFile("/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/data/testInput.txt", "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/", "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/sort.txt", 2, 30);
-        //obj.process(new UserLineComparator(), new AvgLogFileComparator());
         String sortFile = "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/sort.txt";
         String resultFile = "/Users/kkdoon/Documents/IntelliJ_Workspace/TwitterLogAnalyzer/src/main/resources/temp/result.txt";
         SortedAvgWriter obj = new SortedAvgWriter(sortFile, resultFile, new DefaultOCPolicy(), 30);

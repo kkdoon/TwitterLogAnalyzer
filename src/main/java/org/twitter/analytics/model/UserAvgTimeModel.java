@@ -4,7 +4,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 /**
- * Created by kkdoon on 11/4/16.
+ * Stores average value for given tick.
  */
 public class UserAvgTimeModel {
     private String userId;

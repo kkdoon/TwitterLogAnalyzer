@@ -10,11 +10,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by kkdoon on 11/4/16.
+ * Generic core class to calculate average.
  */
 public class AverageCalculator {
     private final static Logger LOG = Logger.getLogger(AverageCalculator.class);
+    /**
+     * Stores userid vs user average.
+     */
     private Map<String, UserAvgTimeModel> map;
+    /**
+     * Policy used to handle open/close ticks
+     */
     private OCPolicy policy;
 
     public AverageCalculator(OCPolicy policy) {
@@ -22,6 +28,11 @@ public class AverageCalculator {
         this.policy = policy;
     }
 
+    /**
+     * Adds tick value to appropriate user and uses this tick to calculate average
+     *
+     * @param tick
+     */
     public void addTick(UserTick tick) {
         if (tick == null) return;
 
@@ -74,6 +85,14 @@ public class AverageCalculator {
         return map.get(userId);
     }
 
+    /**
+     * Calculates average value in optimized manner
+     *
+     * @param prevAvg
+     * @param num
+     * @param count
+     * @return
+     */
     private double calculateAverage(double prevAvg, long num, long count) {
         if (count > 0) {
             prevAvg += (num - prevAvg) / count;
@@ -82,6 +101,11 @@ public class AverageCalculator {
         return 0.0;
     }
 
+    /**
+     * Applies policy to handle situation where open-close tick pair is not available
+     *
+     * @param userId
+     */
     public void flushAvg(String userId) {
         UserAvgTimeModel obj = map.get(userId);
         if (obj != null && obj.getOldTick() != null) {

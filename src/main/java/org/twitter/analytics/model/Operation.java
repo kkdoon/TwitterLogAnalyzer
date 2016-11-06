@@ -1,7 +1,7 @@
 package org.twitter.analytics.model;
 
 /**
- * Created by kkdoon on 11/5/16.
+ * Enumeration to store action types.
  */
 public enum Operation {
     open, close;

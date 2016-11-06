@@ -1,5 +1,8 @@
 package org.twitter.analytics.model;
 
+/**
+ * Stores tick value.
+ */
 public class UserTick {
     private String userID;
     private long timestamp;

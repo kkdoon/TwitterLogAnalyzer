@@ -13,7 +13,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 /**
- * Created by kkdoon on 11/6/16.
+ * Core class which reads sorted file and calculates average on user data and stores in output file.
  */
 public class SortedAvgWriter {
     private final static Logger LOG = Logger.getLogger(SortedAvgWriter.class);
@@ -23,7 +23,7 @@ public class SortedAvgWriter {
     private String prevUser, currentUser;
     private AverageCalculator calculator;
     private ObjectMapper mapper;
-    private  boolean isFirst;
+    private boolean isFirst;
 
     public SortedAvgWriter(String sortOutput, String resultOutput, OCPolicy policy, int maxCharsRead) {
         this.sortOutput = sortOutput;

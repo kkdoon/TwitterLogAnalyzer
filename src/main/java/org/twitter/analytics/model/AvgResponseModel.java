@@ -1,7 +1,7 @@
 package org.twitter.analytics.model;
 
 /**
- * Created by kkdoon on 11/5/16.
+ * Stores response to custom policy.
  */
 public class AvgResponseModel {
     private Long interval;

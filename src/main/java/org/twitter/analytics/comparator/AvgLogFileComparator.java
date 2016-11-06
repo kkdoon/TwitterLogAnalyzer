@@ -5,7 +5,7 @@ import org.twitter.analytics.iterator.BufferedReaderIterator;
 import java.util.Comparator;
 
 /**
- * Created by kkdoon on 11/5/16.
+ * Comparator class to compare lines from 2 files. The line contains user activity data.
  */
 public class AvgLogFileComparator implements Comparator<BufferedReaderIterator> {
 
