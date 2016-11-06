@@ -1,7 +1,6 @@
 package org.twitter.analytics.core;
 
-import org.twitter.analytics.comparator.AvgLogFileComparator;
-import org.twitter.analytics.comparator.UserLineComparator;
+import org.apache.log4j.Logger;
 import org.twitter.analytics.iterator.BufferedReaderIterator;
 import org.twitter.analytics.util.FileUtil;
 
@@ -14,7 +13,7 @@ import java.util.*;
  * Created by kkdoon on 11/4/16.
  */
 public class MergeSortFile {
-
+    private final static Logger LOG = Logger.getLogger(MergeSortFile.class);
     private String inputFile, tempPath, outputFile;
     private int maxLines;
     private List<String> tempFiles;
@@ -37,6 +36,7 @@ public class MergeSortFile {
     }
 
     private void partitionFiles(Comparator<String> comparator) {
+        LOG.info("Starting file partitioning");
         int count = 0, totalCount = 0;
         BufferedReader br = null;
         List<String> tempList;
@@ -50,7 +50,9 @@ public class MergeSortFile {
                     Collections.sort(tempList, comparator);
                     // Write data to temp file
                     tempFiles.add(FileUtil.createTempFile(tempPath));
-                    System.out.println("Temp file:" + tempFiles.get(tempFiles.size() - 1));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Temp file:" + tempFiles.get(tempFiles.size() - 1));
+                    }
                     BufferedWriter writer = null;
                     try {
                         writer = FileUtil.getFileWriter(tempFiles.get(tempFiles.size() - 1));
@@ -61,7 +63,7 @@ public class MergeSortFile {
                             }
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOG.error("Error while partitioning file", e);
                     } finally {
                         FileUtil.closeFile(writer);
                         count = 0;
@@ -71,13 +73,13 @@ public class MergeSortFile {
                 tempList.add(line);
                 count++;
             }
-            System.out.println("Total:" + totalCount);
-            System.out.println("Total list:" + tempList.size());
             if (tempList.size() > 0) {
                 Collections.sort(tempList);
                 // Write data to temp file
                 tempFiles.add(FileUtil.createTempFile(tempPath));
-                System.out.println("Final Temp file:" + tempFiles.get(tempFiles.size() - 1));
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Final Temp file:" + tempFiles.get(tempFiles.size() - 1));
+                }
                 BufferedWriter writer = null;
                 try {
                     writer = FileUtil.getFileWriter(tempFiles.get(tempFiles.size() - 1));
@@ -88,7 +90,7 @@ public class MergeSortFile {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Error while partitioning file", e);
                 } finally {
                     FileUtil.closeFile(writer);
                     count = 0;
@@ -96,10 +98,11 @@ public class MergeSortFile {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error while partitioning files", e);
         } finally {
             FileUtil.closeFile(br);
         }
+        LOG.info("File partitioning ended");
     }
 
     private void mergeFiles(Comparator<BufferedReaderIterator> comparator) {
@@ -112,13 +115,13 @@ public class MergeSortFile {
                 queue.offer(new BufferedReaderIterator(fileReaders[count]));
                 count++;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Error while merging files", e);
             }
         }
+        LOG.info("Starting file merge among " + tempFiles.size() + " files");
         BufferedWriter writer = null;
         try {
             writer = FileUtil.getFileWriter(outputFile);
-            System.out.println("Writing to file:" + outputFile);
             while (queue.size() > 0) {
                 BufferedReaderIterator currIter = queue.poll();
                 writer.write(currIter.iterator().next());
@@ -128,12 +131,13 @@ public class MergeSortFile {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error while merging files", e);
         } finally {
             FileUtil.closeFile(writer);
             for (BufferedReader br : fileReaders) {
                 FileUtil.closeFile(br);
             }
         }
+        LOG.info("File merge ended");
     }
 }

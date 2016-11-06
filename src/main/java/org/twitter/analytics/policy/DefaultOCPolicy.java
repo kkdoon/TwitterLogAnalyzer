@@ -1,5 +1,6 @@
 package org.twitter.analytics.policy;
 
+import org.apache.log4j.Logger;
 import org.twitter.analytics.core.AverageCalculator;
 import org.twitter.analytics.model.Operation;
 import org.twitter.analytics.model.UserAvgTimeModel;
@@ -9,10 +10,11 @@ import org.twitter.analytics.model.UserModel;
  * Created by kkdoon on 11/5/16.
  */
 public class DefaultOCPolicy implements OCPolicy {
+    private final static Logger LOG = Logger.getLogger(DefaultOCPolicy.class);
 
     public UserModel calculate(UserModel oldTick, UserModel newTick, UserAvgTimeModel avgObj) {
         if (oldTick == null || newTick == null) {
-            System.out.println("Skipping tick pair as sufficient info not provided " + (avgObj != null ? " user: " + avgObj.getUserId() : ""));
+            LOG.warn("Skipping tick pair as sufficient info not provided " + (avgObj != null ? " user: " + avgObj.getUserId() : ""));
             return null;
         }
 
@@ -35,7 +37,7 @@ public class DefaultOCPolicy implements OCPolicy {
             calculateAvg(interval, avgObj);
         } else {
             // Action types cannot be resolved
-            System.out.println("Skipping tick pair as cannot determine action types");
+            LOG.warn("Skipping tick pair as cannot determine action types");
         }
 
         return nextTick;
